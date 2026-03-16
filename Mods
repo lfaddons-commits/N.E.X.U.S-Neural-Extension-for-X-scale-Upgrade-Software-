@@ -1,1 +1,49 @@
-mods
+🛠️ Guia de Criação de Mods para N.E.X.U.S.
+Bem-vindo ao protocolo de expansão. Este guia ensina como injetar novos comportamentos, inimigos e poderes no motor N.E.X.U.S. usando a biblioteca NeonCore.
+1. Estrutura Básica
+Todo mod é um arquivo .js. A estrutura recomendada usa uma função imediata (IIFE) para evitar conflitos com outros mods:
+(function() {
+    // Seu código aqui
+    NeonCore.notify("Mod Iniciado!", NeonCore.Palette.LIME);
+})();
+2. Criando um Novo Inimigo
+Para registrar um inimigo, use o ModAPI.registerEnemy. Você pode usar os templates do NeonCore para facilitar.
+Exemplo: Inimigo "Pixel Errático"
+ModAPI.registerEnemy('pixel_error', {
+    hp: 50,
+    speed: 180,
+    radius: 12,
+    color: NeonCore.Palette.PHANTOM, // Usa o rosa neon da paleta
+    update: function(dt) {
+        // Comportamento customizado: ele treme enquanto persegue
+        this.x += (Math.random() - 0.5) * 5;
+        this.y += (Math.random() - 0.5) * 5;
+    }
+});
+3. Criando um Upgrade (Skill)
+Quer que o jogador tenha um novo poder ao subir de nível? Use o registerSkill.
+Exemplo: Protocolo Vampiro
+ModAPI.registerSkill('VAMP_LINK', {
+    n: "LINK VAMPÍRICO",
+    d: "Recupera 2 de HP ao abater um inimigo.",
+    f: () => {
+        // Hook no evento de morte
+        ModAPI.addEvent('gameTick', () => {
+            // Lógica customizada aqui
+        });
+        NeonCore.Audio.playPowerUp();
+    }
+});
+
+4. Usando a Biblioteca NeonCore
+O NeonCore é sua caixa de ferramentas. Use-o para manter o padrão visual e sonoro do jogo.
+Cores: NeonCore.Palette.GOLD, CYBER, VIOLET.
+Sons: NeonCore.Audio.playExplode(), playShoot().
+Raridade: NeonCore.Rarity.roll() para decidir quão forte um item será.
+Ambiente: NeonCore.World.setBiome('DEEP_SEA').
+5. Como Testar seu Mod
+Escreva seu código em um editor de texto (ou no Mod Hub do jogo).
+Salve como .js.
+No jogo, clique em HUB -> INSTALAR.
+Selecione seu arquivo ou cole o texto no Editor de Script.
+Use a aba DEBUG para ver se o mod causou erros no console.
